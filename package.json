@@ -3,17 +3,20 @@
   "version": "1.0.0",
   "main": "main.ts",
   "scripts": {
-    "dev": "npx tsc && node --watch --env-file=.env dist/main.js"
+    "dev": "npx tsc && node --env-file=.env dist/main.js",
+    "prisma": "npx prisma studio"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@prisma/client": "^6.5.0",
     "express": "^4.21.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.1",
+    "prisma": "^6.5.0",
     "typescript": "^5.8.2"
   }
 }
