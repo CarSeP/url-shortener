@@ -1,12 +1,15 @@
 import express, { Request, Response } from "express";
 import { prisma } from "./prisma";
+import { getID } from "./generateID";
 
 const app = express();
 const PORT = process.env.PORT;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
-app.get("/:id", async (req: Request, res: Response): Promise<any> => {
+app.get("/api/:id", async (req: Request, res: Response): Promise<any> => {
   const { id } = req.params;
 
   const urlShort = await prisma.shorteners.findUnique({ where: { id } });
@@ -16,14 +19,16 @@ app.get("/:id", async (req: Request, res: Response): Promise<any> => {
   return res.redirect(302, urlShort.url);
 });
 
-app.post("/", async (req: Request, res: Response): Promise<any> => {
+app.post("/api", async (req: Request, res: Response): Promise<any> => {
   const { id, url } = req.body;
 
-  if (!id || !url) res.status(400).json({ Error: "ID or URL not provided" });
+  if (!url) return res.status(400).json({ Error: "URL not provided" });
 
-  const data = { id, url };
+  const data = { id: id ? id : getID(), url };
   const urlShort = await prisma.shorteners.create({ data }).catch(() => {
-    return res.status(500).json({ Error: "An error occurred while creating the short url" });
+    return res
+      .status(500)
+      .json({ Error: "An error occurred while creating the short url" });
   });
 
   return res.json(urlShort);

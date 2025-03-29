@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URL Shortener</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>URL Shortener</h1>
+      </header>
+      <main>
+        <section class="shortener-box">
+          <form class="input-group" id="form">
+            <input
+              type="url"
+              name="url"
+              placeholder="Paste your long URL here. Example: https://www.google.com"
+              required
+            />
+            <button type="submit">Shorten</button>
+          </form>
+          <div id="result-box" class="result-box">
+            <h3>Your shortened URL</h3>
+            <div id="container"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script>
+      const $form = document.getElementById("form");
+      const $section = document.getElementById("result-box");
+      const $container = document.getElementById("container");
+      let urlList = [];
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        const url = e.target.url.value.trim();
+        const response = await fetch("/api", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ url }),
+        });
+
+        const result = await response.json();
+        printURL(result.id);
+      };
+      const printURL = (url) => {
+        $section.classList.add("show");
+        urlList.push(`${window.location.origin}/api/${url}`);
+
+        let htmlContent = "";
+        urlList.forEach((el) => {
+          htmlContent += `
+            <article class='shortened-url'>
+            <p>${el}</p>
+            <button class='copy-btn' onclick='copyText("${el}")'>Copy</button>
+            </article>`;
+        });
+        $container.innerHTML = htmlContent;
+      };
+      const copyText = (text) => {
+        navigator.clipboard.writeText(text);
+      };
+      $form.addEventListener("submit", handleSubmit);
+    </script>
+  </body>
+</html>
