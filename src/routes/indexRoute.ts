@@ -1,15 +1,10 @@
 import express, { Request, Response } from "express";
-import { prisma } from "./prisma";
-import { getID } from "./generateID";
+import { prisma } from "../libs/prisma";
+import { getID } from "../libs/idServices";
 
-const app = express();
-const PORT = process.env.PORT;
+const router = express.Router();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
-
-app.get("/api/:id", async (req: Request, res: Response): Promise<any> => {
+router.get("/:id", async (req: Request, res: Response): Promise<any> => {
   const { id } = req.params;
 
   const urlShort = await prisma.shorteners.findUnique({ where: { id } });
@@ -19,7 +14,7 @@ app.get("/api/:id", async (req: Request, res: Response): Promise<any> => {
   return res.redirect(302, urlShort.url);
 });
 
-app.post("/api", async (req: Request, res: Response): Promise<any> => {
+router.post("/", async (req: Request, res: Response): Promise<any> => {
   const { id, url } = req.body;
 
   if (!url) return res.status(400).json({ Error: "URL not provided" });
@@ -34,6 +29,4 @@ app.post("/api", async (req: Request, res: Response): Promise<any> => {
   return res.json(urlShort);
 });
 
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
-});
+export default router;

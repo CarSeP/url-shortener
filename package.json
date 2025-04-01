@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "main.ts",
   "scripts": {
-    "dev": "npx tsc && node --env-file=.env dist/main.js",
+    "start": "npx tsc && node --env-file=.env dist/main.js",
     "prisma": "npx prisma studio"
   },
   "keywords": [],
