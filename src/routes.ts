@@ -27,13 +27,13 @@ export const routes = {
         }
 
         const code = getCode();
-        const newURl = `${req.url.replace("/api", "")}/${code}`;
+        const newURL = `${req.url.replace("/api", "")}/${code}`;
 
         sqlite
           .prepare("INSERT INTO url (redirect, code) VALUES (?, ?);")
           .all(url, code);
 
-        return Response.json({ code, newURl });
+        return Response.json({ code, newURL });
       } catch {
         return Response.json({ error: "Server error" }, { status: 500 });
       }
