@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "bun --watch index.ts",
-    "migrate": "bun db.ts"
+    "migrate": "bun db.ts",
+    "start": "bun db.ts & bun index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
