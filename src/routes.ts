@@ -1,5 +1,4 @@
-import type { BunRequest } from "bun";
-import homePage from "./app/app.html";
+import homePage from "./public/app.html";
 import { shortUrlController } from "./controllers/shortUrl.controller";
 
 export const routes = {
