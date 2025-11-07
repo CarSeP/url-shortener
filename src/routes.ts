@@ -1,5 +1,5 @@
 import type { BunRequest } from "bun";
-import homePage from "./index.html";
+import homePage from "./app/app.html";
 import { isValidUrl } from "./services/url.service";
 import { sqlite } from "./services/sqlite.service";
 import { getCode } from "./services/code.service";

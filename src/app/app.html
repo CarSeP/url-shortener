@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Url Shortener</title>
+        <link rel="stylesheet" href="app.css" />
+        <script type="module" src="app.js"></script>
+    </head>
+    <body>
+        <main>
+            <div class="hero">
+                <h1>Shorten your links.</h1>
+                <p>
+                    Turn long URLs into short, memorable links. Fast, simple,
+                    and reliable.
+                </p>
+            </div>
+
+            <div class="shortener-card">
+                <form>
+                    <div class="input-group">
+                        <input
+                            type="url"
+                            class="url-input"
+                            id="urlInput"
+                            placeholder="https://www.google.com/"
+                            required
+                        />
+                        <button type="submit" class="btn-shorten">
+                            Shorten
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+        <template>
+            <div class="result-container" id="resultContainer">
+                <span class="result-label">Your shortened link:</span>
+                <div class="result-url">
+                    <a
+                        href="#"
+                        class="shortened-url"
+                        id="shortenedUrl"
+                        target="_blank"
+                    ></a>
+                    <button class="btn-copy">Copy</button>
+                </div>
+            </div>
+        </template>
+    </body>
+</html>
