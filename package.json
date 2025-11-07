@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "bun --watch index.ts",
     "migrate": "bun db.ts",
-    "start": "bun db.ts & bun index.ts",
+    "build": "bun build --target=bun --outdir=dist ./index.ts",
+    "start": "bun dist/index.js",
     "test": "bun test"
   },
   "devDependencies": {
