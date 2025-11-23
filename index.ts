@@ -1,7 +1,9 @@
 import { createServer } from "./src/server";
 
-const PORT = process.env.PORT || "3000"
+const PORT = process.env.PORT || "3000";
 
-const server = createServer(PORT);
+const server = createServer();
 
-console.log(`Server running at ${server.url}`);
+server.listen(PORT, ({ hostname, port }) => {
+  console.log(`Server is running at ${hostname}:${port}`);
+});
