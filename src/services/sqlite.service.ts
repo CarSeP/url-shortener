@@ -1,3 +1,3 @@
-import db from "./../../db.sqlite" with { type: "sqlite" };
+import { SQL } from "bun";
 
-export const sqlite = db;
+export const pg = new SQL(process.env.POSTGRESQL_URL || "");

@@ -1,26 +1,22 @@
 import { getCode } from "./code.service";
 import { isValidUrl } from "./url.service";
-import { sqlite } from "./sqlite.service";
+import { pg } from "./sqlite.service";
 
-export const createShortUrl = (url: string, reqUrl: string) => {
+export const createShortUrl = async (url: string, reqUrl: string) => {
   if (!isValidUrl(url)) return null;
 
   const code = getCode();
   const newURL = `${reqUrl.replace("/api", "")}/${code}`;
 
-  sqlite
-    .prepare("INSERT INTO url (redirect, code) VALUES (?, ?);")
-    .all(url, code);
+  await pg`INSERT INTO url (redirect, code) VALUES (${url}, ${code});`;
 
   return { code, newURL };
 };
-export const getShortUrl = (code: string) => {
+export const getShortUrl = async (code: string) => {
+  const data = await pg`SELECT redirect from url where code = ${code};`;
 
-  const data = sqlite
-    .prepare("SELECT redirect from url where code = ?;")
-    .all(code);
-
-  if (!data[0]) return null;
-
+  if (!data.length) {
+    return null;
+  }
   return data[0];
 };

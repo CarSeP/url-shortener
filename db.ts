@@ -1,15 +1,11 @@
-import { Database } from "bun:sqlite";
+import { SQL } from "bun";
 
-const db = new Database("db.sqlite", { create: true });
+const pg = new SQL(process.env.POSTGRESQL_URL || "");
 
-db.exec(
-  `
-  CREATE TABLE IF NOT EXISTS url (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+await pg`
+ CREATE TABLE IF NOT EXISTS url (
+    id BIGSERIAL PRIMARY KEY,
     redirect TEXT NOT NULL,
     code TEXT NOT NULL UNIQUE
-  );
-`,
 );
-
-db.close(true);
+`;

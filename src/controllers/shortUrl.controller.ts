@@ -1,10 +1,10 @@
 import { type Handler } from "elysia";
 import { createShortUrl, getShortUrl } from "../services/shortUrl.service";
 
-const addUrl: Handler = ({ status, body, request }) => {
+const addUrl: Handler = async ({ status, body, request }) => {
   const reqUrl = new URL(request.url).toString();
   const { url } = body as { url: string };
-  const data = createShortUrl(url, reqUrl);
+  const data = await createShortUrl(url, reqUrl);
 
   if (!data) {
     return status(400, { error: "Field 'url' is not a valid URL" });
@@ -13,9 +13,9 @@ const addUrl: Handler = ({ status, body, request }) => {
   return status(200, data);
 };
 
-const getUrl: Handler = ({ status, params, redirect }) => {
+const getUrl: Handler = async ({ status, params, redirect }) => {
   const { code } = params as { code: string };
-  const data = getShortUrl(code);
+  const data = await getShortUrl(code);
 
   if (!data) {
     return status(404, {
