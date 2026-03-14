@@ -5,7 +5,6 @@
   "private": true,
   "scripts": {
     "dev": "bun --watch index.ts",
-    "migrate": "bun db.ts",
     "build": "bun build ./index.ts",
     "preview": "bun dist/index.js",
     "start": "bun index.js",
