@@ -1,11 +1,12 @@
 # Url shortener
-A lightweight application written with Bun that uses SQLite as a database to store and manage short URL redirects.
+A lightweight application written with Bun that uses SQLite (or PostgreSQL) as a database to store and manage short URL redirects.
 
 ## Technologies
 
 - Bun
 - TypeScript
-- Sqlite
+- Elysia
+- Sqlite and PostgreSQL
 
 ## Installation
 
@@ -19,11 +20,7 @@ Install the dependencies
 ```sh
 bun install
 ```
-
-Runs database migrations
-```sh
-bun run migrate
-```
+Copy the values from .env.example and create a .env file
 
 ## Usage
 
@@ -84,7 +81,6 @@ Url shortener/
 │   ├── test/         # Unit tests
 │   ├── route.ts      # File responsible for routes
 │   ├── server.ts     # File responsible for initializing the server
-├── db.ts             # Initialize the database
 ├── index.ts          # Initialize the server
 └── ...               # Other configuration files
 ```
