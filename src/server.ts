@@ -1,6 +1,7 @@
 import { Elysia } from "elysia";
-import { routes } from "./routes";
+import { codeRouter } from "./routes/code.router";
+import appPage from "./views/app/app.html";
 
 export const createServer = () => {
-  return new Elysia().use(routes);
+  return new Elysia().get("/", appPage).use(codeRouter);
 };

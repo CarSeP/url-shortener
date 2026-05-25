@@ -1,5 +1,5 @@
 import { type Handler } from "elysia";
-import { createShortUrl, getShortUrl } from "../services/shortUrl.service";
+import { createShortUrl, getShortUrl } from "../utils/services/shortUrl.service";
 
 const addUrl: Handler = async ({ status, body, request }) => {
   const reqUrl = new URL(request.url).toString();
