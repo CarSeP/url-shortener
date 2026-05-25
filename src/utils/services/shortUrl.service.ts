@@ -1,6 +1,6 @@
-import { getCode } from "./code.service";
-import { db } from "./db.service";
-import { isValidUrl } from "./url.service";
+import { getCode } from "@/utils/services/code.service";
+import { db } from "@/utils/services/db.service";
+import { isValidUrl } from "@/utils/services/url.service";
 
 export const createShortUrl = async (url: string, reqUrl: string) => {
   if (!isValidUrl(url)) return null;

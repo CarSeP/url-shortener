@@ -1,5 +1,5 @@
-import { createServer } from "./src/server";
-import { verifyDatabase } from "./src/utils/services/db.service";
+import { createServer } from "@/server";
+import { verifyDatabase } from "@/utils/services/db.service";
 
 const PORT = process.env.PORT || "3000";
 
