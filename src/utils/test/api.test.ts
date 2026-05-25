@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { createShortUrl, getShortUrl } from "../utils/services/shortUrl.service";
+import { createShortUrl, getShortUrl } from "../services/shortUrl.service";
 
 const URL = "https://example.com/abc/123";
 const INVALID_VALUE = "qwe123";
