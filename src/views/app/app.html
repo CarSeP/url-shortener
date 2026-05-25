@@ -1,13 +1,16 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Url Shortener</title>
+        <title>URL Shortener</title>
         <link rel="stylesheet" href="app.css" />
         <script type="module" src="app.js"></script>
     </head>
     <body>
+        <nav class="top-nav">
+            <a href="/login" class="login-link">Login</a>
+        </nav>
         <main>
             <div class="hero">
                 <h1>Shorten your links.</h1>
@@ -32,21 +35,25 @@
                         </button>
                     </div>
                 </form>
-            </div>
-        </main>
-        <template>
-            <div class="result-container" id="resultContainer">
-                <span class="result-label">Your shortened link:</span>
-                <div class="result-url">
-                    <a
-                        href="#"
-                        class="shortened-url"
-                        id="shortenedUrl"
-                        target="_blank"
-                    ></a>
-                    <button class="btn-copy">Copy</button>
+                <div class="result-container" id="resultContainer" style="display: none;">
+                    <span class="result-label">YOUR SHORTENED LINK:</span>
+                    <div class="result-url">
+                        <a
+                            href="#"
+                            class="shortened-url"
+                            id="shortenedUrl"
+                            target="_blank"
+                        ></a>
+                        <button class="btn-copy" id="btnCopy">
+                            <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            Copy
+                        </button>
+                    </div>
                 </div>
             </div>
-        </template>
+        </main>
     </body>
 </html>
