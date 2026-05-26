@@ -9,12 +9,19 @@
     </head>
     <body>
         <nav class="top-nav">
-            <div id="userSection" style="display: none; align-items: center; gap: 1rem;">
-                <img id="userAvatar" src="" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%;" />
-                <span id="userName"></span>
-                <button id="logoutBtn" class="logout-btn">Logout</button>
+            <div id="userSection" class="user-dropdown" style="display: none;">
+                <button id="userToggle" class="user-toggle">
+                    <svg class="user-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+                <div id="dropdownMenu" class="dropdown-menu">
+                    <a href="/profile" class="dropdown-item">Profile</a>
+                    <button id="logoutBtn" class="dropdown-item logout-item">Logout</button>
+                </div>
             </div>
-            <a href="auth/github" id="loginLink" class="login-link">Login</a>
+            <a href="auth/github" id="loginLink" class="login-link">Login with GitHub</a>
         </nav>
         <main>
             <div class="hero">

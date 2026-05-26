@@ -4,8 +4,8 @@ const $shortenedUrl = document.getElementById("shortenedUrl");
 const $btnCopy = document.getElementById("btnCopy");
 const $userSection = document.getElementById("userSection");
 const $loginLink = document.getElementById("loginLink");
-const $userAvatar = document.getElementById("userAvatar");
-const $userName = document.getElementById("userName");
+const $userToggle = document.getElementById("userToggle");
+const $dropdownMenu = document.getElementById("dropdownMenu");
 const $logoutBtn = document.getElementById("logoutBtn");
 
 const getCookie = (name) => {
@@ -19,14 +19,20 @@ const checkAuth = () => {
     const userCookie = getCookie("user");
     if (userCookie) {
         try {
-            const user = JSON.parse(userCookie);
-            $userSection.style.display = "flex";
+            JSON.parse(decodeURIComponent(userCookie));
+            $userSection.style.display = "block";
             $loginLink.style.display = "none";
-            $userAvatar.src = user.avatar_url;
-            $userName.textContent = user.login;
-        } catch (e) {
-            console.error("Error parsing user cookie:", e);
-        }
+        } catch { }
+    }
+};
+
+const toggleDropdown = () => {
+    $dropdownMenu.classList.toggle("show");
+};
+
+const closeDropdown = (e) => {
+    if (!$userSection.contains(e.target)) {
+        $dropdownMenu.classList.remove("show");
     }
 };
 
@@ -36,11 +42,17 @@ const handleLogout = () => {
     window.location.reload();
 };
 
+if ($userToggle) {
+    $userToggle.addEventListener("click", toggleDropdown);
+}
+
 if ($logoutBtn) {
     $logoutBtn.addEventListener("click", handleLogout);
 }
 
-checkAuth();
+document.addEventListener("click", closeDropdown);
+
+document.addEventListener("DOMContentLoaded", checkAuth);
 
 const onSubmit = async (event) => {
     event.preventDefault();
@@ -102,9 +114,7 @@ const copyToClipboard = async (text) => {
                 Copy
             `;
         }, 2000);
-    } catch (err) {
-        console.error("Failed to copy:", err);
-    }
+    } catch { }
 };
 
 if ($form) {
