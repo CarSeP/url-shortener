@@ -2,6 +2,45 @@ const $form = document.querySelector("form");
 const $resultContainer = document.getElementById("resultContainer");
 const $shortenedUrl = document.getElementById("shortenedUrl");
 const $btnCopy = document.getElementById("btnCopy");
+const $userSection = document.getElementById("userSection");
+const $loginLink = document.getElementById("loginLink");
+const $userAvatar = document.getElementById("userAvatar");
+const $userName = document.getElementById("userName");
+const $logoutBtn = document.getElementById("logoutBtn");
+
+const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+    return null;
+};
+
+const checkAuth = () => {
+    const userCookie = getCookie("user");
+    if (userCookie) {
+        try {
+            const user = JSON.parse(userCookie);
+            $userSection.style.display = "flex";
+            $loginLink.style.display = "none";
+            $userAvatar.src = user.avatar_url;
+            $userName.textContent = user.login;
+        } catch (e) {
+            console.error("Error parsing user cookie:", e);
+        }
+    }
+};
+
+const handleLogout = () => {
+    document.cookie = "auth_token=; path=/; max-age=0";
+    document.cookie = "user=; path=/; max-age=0";
+    window.location.reload();
+};
+
+if ($logoutBtn) {
+    $logoutBtn.addEventListener("click", handleLogout);
+}
+
+checkAuth();
 
 const onSubmit = async (event) => {
     event.preventDefault();

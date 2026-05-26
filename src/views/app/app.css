@@ -36,7 +36,42 @@ body {
 .top-nav {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     padding: 1rem 2rem;
+}
+
+#userSection {
+    display: none;
+    align-items: center;
+    gap: 1rem;
+}
+
+#userAvatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+#userName {
+    color: var(--color-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.logout-btn {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.logout-btn:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
 }
 
 .login-link {
