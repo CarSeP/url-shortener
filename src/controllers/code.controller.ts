@@ -26,7 +26,7 @@ const getUrl: Handler = async ({ status, params, redirect }) => {
   return redirect(data.redirect);
 };
 
-export const shortUrlController = {
+export const codeController = {
   addUrl,
   getUrl,
 };

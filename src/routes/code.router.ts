@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
-import { shortUrlController } from "@/controllers/shortUrl.controller";
 import { shortUrlSchema } from "@/utils/schemas/shortUrl.schema";
+import { codeController } from "@/controllers/code.controller";
 
 export const codeRouter = new Elysia()
-  .get("/:code", shortUrlController.getUrl)
-  .post("/api", shortUrlController.addUrl, shortUrlSchema(t));
+  .get("/:code", codeController.getUrl)
+  .post("/api", codeController.addUrl, shortUrlSchema(t));
