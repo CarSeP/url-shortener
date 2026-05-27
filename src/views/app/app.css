@@ -201,6 +201,14 @@ main {
     cursor: pointer;
     transition: background-color 0.2s;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-shorten svg {
+    width: 16px;
+    height: 16px;
 }
 
 .btn-shorten:hover {

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Profile - URL Shortener</title>
+        <link rel="stylesheet" href="profile.css" />
+        <script type="module" src="profile.js"></script>
+    </head>
+    <body>
+        <div class="home-bar">
+            <a href="/" class="home-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                Home
+            </a>
+        </div>
+
+        <main class="profile-container">
+            <div class="profile-header">
+                <div class="profile-info">
+                    <img id="profileAvatar" src="" alt="User avatar" class="profile-avatar" />
+                    <div class="profile-details">
+                        <h1 id="profileName" class="profile-name"></h1>
+                        <p id="profileUsername" class="profile-username"></p>
+                    </div>
+                </div>
+                <div class="profile-stats">
+                    <div class="stat-card">
+                        <span class="stat-label">TOTAL CLICKS</span>
+                        <span id="totalClicks" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">ACTIVE LINKS</span>
+                        <span id="totalLinks" class="stat-value">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="create-link-card">
+                <h2 class="card-title">Create a Short Link</h2>
+                <p class="card-subtitle">Enter your long URL to generate a trackable, shortened link.</p>
+                <form id="shortenForm" class="shorten-form">
+                    <div class="input-group">
+                        <input
+                            type="url"
+                            id="urlInput"
+                            class="url-input"
+                            placeholder="https://www.google.com/"
+                            required
+                        />
+                        <button type="submit" class="btn-shorten">
+                            Shorten
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+                <div class="result-container" id="resultContainer" style="display: none;">
+                    <span class="result-label">YOUR SHORTENED LINK:</span>
+                    <div class="result-url">
+                        <a href="#" class="shortened-url" id="shortenedUrl" target="_blank"></a>
+                        <button class="btn-copy" id="btnCopy">
+                            <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="links-section">
+                <div class="links-header">
+                    <h2 class="section-title">My Recent Links</h2>
+                    <button class="btn-filter">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        Filter
+                    </button>
+                </div>
+                <div class="links-table-container">
+                    <table class="links-table">
+                        <thead>
+                            <tr>
+                                <th>SHORT LINK</th>
+                                <th>ORIGINAL DESTINATION</th>
+                                <th>CLICKS</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="linksTableBody">
+                        </tbody>
+                    </table>
+                    <div id="emptyState" class="empty-state" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                        </svg>
+                        <p>No links created yet. Start by shortening your first URL!</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
