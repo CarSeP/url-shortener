@@ -1,4 +1,5 @@
 import type { Context } from "elysia";
+import { upsertUser } from "@/utils/services/user.service";
 
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || "";
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || "";
@@ -65,6 +66,8 @@ const handleGitHubCallback = async ({
     name?: string;
     email?: string;
   };
+
+  await upsertUser(userData, tokenData.access_token);
 
   const authToken = cookie.auth_token!;
   authToken.value = tokenData.access_token;

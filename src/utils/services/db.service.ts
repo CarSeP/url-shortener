@@ -46,10 +46,24 @@ const createSqliteDB = () => {
 
     db.exec(
       `
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    github_id INTEGER NOT NULL UNIQUE,
+    login TEXT NOT NULL,
+    avatar_url TEXT,
+    name TEXT,
+    email TEXT,
+    access_token TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
   CREATE TABLE IF NOT EXISTS url (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
     redirect TEXT NOT NULL,
-    code TEXT NOT NULL UNIQUE
+    code TEXT NOT NULL UNIQUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
   );
 `,
     );
@@ -65,10 +79,24 @@ const validatePostgresql = async (connection: SQL) => {
   try {
     console.log("Loading the PostgreSQL connection...");
     await connection`
+CREATE TABLE IF NOT EXISTS users (
+  id BIGSERIAL PRIMARY KEY,
+  github_id BIGINT NOT NULL UNIQUE,
+  login TEXT NOT NULL,
+  avatar_url TEXT,
+  name TEXT,
+  email TEXT,
+  access_token TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS url (
-id BIGSERIAL PRIMARY KEY,
-redirect TEXT NOT NULL,
-code TEXT NOT NULL UNIQUE
+  id BIGSERIAL PRIMARY KEY,
+  user_id BIGINT,
+  redirect TEXT NOT NULL,
+  code TEXT NOT NULL UNIQUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 `;
     return true;
