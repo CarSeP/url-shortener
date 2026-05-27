@@ -2,13 +2,17 @@ import { getCode } from "@/utils/services/code.service";
 import { db } from "@/utils/services/db.service";
 import { isValidUrl } from "@/utils/services/url.service";
 
-export const createShortUrl = async (url: string, reqUrl: string) => {
+export const createShortUrl = async (url: string, reqUrl: string, userId?: number) => {
   if (!isValidUrl(url)) return null;
 
   const code = getCode();
   const newURL = `${reqUrl.replace("/api", "")}/${code}`;
 
-  await db("INSERT INTO url (redirect, code) VALUES ($1, $2);", [url, code]);
+  if (userId) {
+    await db("INSERT INTO url (redirect, code, user_id) VALUES ($1, $2, $3);", [url, code, String(userId)]);
+  } else {
+    await db("INSERT INTO url (redirect, code) VALUES ($1, $2);", [url, code]);
+  }
 
   return { code, newURL };
 };
