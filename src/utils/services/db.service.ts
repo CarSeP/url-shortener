@@ -36,7 +36,7 @@ export const verifyDatabase = async () => {
   }
 
   console.error(
-    "You must add an environment variable named DATABASE with the value “sqlite” or “postgresql”",
+    'You must add an environment variable named DATABASE with the value "sqlite" or "postgresql"',
   );
 };
 
@@ -62,8 +62,17 @@ const createSqliteDB = () => {
     user_id INTEGER,
     redirect TEXT NOT NULL,
     code TEXT NOT NULL UNIQUE,
+    clicks INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS clicks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    code TEXT NOT NULL,
+    ip TEXT,
+    user_agent TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 `,
     );
@@ -95,8 +104,17 @@ CREATE TABLE IF NOT EXISTS url (
   user_id BIGINT,
   redirect TEXT NOT NULL,
   code TEXT NOT NULL UNIQUE,
+  clicks BIGINT DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS clicks (
+  id BIGSERIAL PRIMARY KEY,
+  code TEXT NOT NULL,
+  ip TEXT,
+  user_agent TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `;
     return true;

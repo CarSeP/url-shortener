@@ -1,6 +1,7 @@
 import { db } from "@/utils/services/db.service";
 import { type Handler } from "elysia";
 import { createShortUrl, getShortUrl } from "@/utils/services/shortUrl.service";
+import { recordClick, getClicksByCode } from "@/utils/services/click.service";
 
 const addUrl: Handler = async ({ status, body, request, cookie }) => {
   const reqUrl = new URL(request.url).toString();
@@ -26,9 +27,9 @@ const addUrl: Handler = async ({ status, body, request, cookie }) => {
   return status(200, data);
 };
 
-const getUrl: Handler = async ({ status, params, redirect }) => {
+const getUrl: Handler = async ({ status, params, redirect, request, store }) => {
   const { code } = params as { code: string };
-  const data =  await getShortUrl(code);
+  const data = await getShortUrl(code);
 
   if (!data) {
     return status(404, {
@@ -36,10 +37,23 @@ const getUrl: Handler = async ({ status, params, redirect }) => {
     });
   }
 
+  const ip = (store as Record<string, unknown>).clientIP as string || "unknown";
+  const userAgent = request.headers.get("user-agent") || "unknown";
+
+  await db("UPDATE url SET clicks = clicks + 1 WHERE code = $1;", [code]);
+  await recordClick(code, ip, userAgent);
+
   return redirect(data.redirect);
+};
+
+const getClicks: Handler = async ({ params, status }) => {
+  const { code } = params as { code: string };
+  const data = await getClicksByCode(code);
+  return status(200, data);
 };
 
 export const codeController = {
   addUrl,
   getUrl,
+  getClicks,
 };
