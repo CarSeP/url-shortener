@@ -4,4 +4,5 @@ import { profileController } from "@/controllers/profile.controller";
 export const profileRouter = new Elysia({ prefix: "/profile" })
   .get("/api/links", profileController.getUserLinks)
   .get("/api/stats", profileController.getUserStats)
-  .delete("/api/links/:id", profileController.deleteLink);
+  .delete("/api/links/:id", profileController.deleteLink)
+  .get("/api/links/:code/clicks", profileController.getRecentLinkClicks);

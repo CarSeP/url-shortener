@@ -1,12 +1,21 @@
 import type { Context } from "elysia";
 import { db } from "@/utils/services/db.service";
+import { getRecentClicks } from "@/utils/services/click.service";
 
 const getUserIdFromCookie = async (cookie: Context["cookie"]) => {
   const userCookie = cookie.user?.value;
   if (!userCookie) return null;
 
   try {
-    const user = JSON.parse(decodeURIComponent(userCookie));
+    let user: { id?: number };
+    if (typeof userCookie === "string") {
+      user = JSON.parse(decodeURIComponent(userCookie));
+    } else if (typeof userCookie === "object" && userCookie !== null) {
+      user = userCookie as { id?: number };
+    } else {
+      return null;
+    }
+    if (!user.id) return null;
     const result = await db("SELECT id FROM users WHERE github_id = $1;", [String(user.id)]);
     return result?.[0]?.id ?? null;
   } catch {
@@ -37,11 +46,15 @@ const getUserStats = async ({ cookie, set }: Context) => {
   }
 
   const stats = await db(
-    "SELECT COUNT(*) as total_links, COALESCE(SUM(clicks), 0) as total_clicks FROM url WHERE user_id = $1;",
+    `SELECT
+      COUNT(*) as total_links,
+      COALESCE(SUM(clicks), 0) as total_clicks,
+      COUNT(*) as active_links
+    FROM url WHERE user_id = $1;`,
     [String(userId)]
   );
 
-  return stats?.[0] || { total_links: 0, total_clicks: 0 };
+  return stats?.[0] || { total_links: 0, total_clicks: 0, active_links: 0 };
 };
 
 const deleteLink = async ({ cookie, set, params }: Context) => {
@@ -57,8 +70,27 @@ const deleteLink = async ({ cookie, set, params }: Context) => {
   return { success: true };
 };
 
+const getRecentLinkClicks = async ({ cookie, set, params }: Context) => {
+  const userId = await getUserIdFromCookie(cookie);
+  if (!userId) {
+    set.status = 401;
+    return { error: "Unauthorized" };
+  }
+
+  const { code } = params as { code: string };
+  const link = await db("SELECT id FROM url WHERE code = $1 AND user_id = $2;", [code, String(userId)]);
+  if (!link || link.length === 0) {
+    set.status = 404;
+    return { error: "Link not found" };
+  }
+
+  const clicks = await getRecentClicks(code, 10);
+  return clicks;
+};
+
 export const profileController = {
   getUserLinks,
   getUserStats,
   deleteLink,
+  getRecentLinkClicks,
 };

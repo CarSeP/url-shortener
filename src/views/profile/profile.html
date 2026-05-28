@@ -33,7 +33,7 @@
                         <span id="totalClicks" class="stat-value">0</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-label">ACTIVE LINKS</span>
+                        <span class="stat-label">MY LINKS</span>
                         <span id="totalLinks" class="stat-value">0</span>
                     </div>
                 </div>
@@ -107,5 +107,20 @@
                 </div>
             </div>
         </main>
+
+        <div id="clicksModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Recent Clicks</h2>
+                    <button class="modal-close" id="modalClose">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <div id="modalBody" class="modal-body"></div>
+            </div>
+        </div>
     </body>
 </html>

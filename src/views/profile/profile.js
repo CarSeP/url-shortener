@@ -10,6 +10,9 @@ const $shortenedUrl = document.getElementById("shortenedUrl");
 const $btnCopy = document.getElementById("btnCopy");
 const $linksTableBody = document.getElementById("linksTableBody");
 const $emptyState = document.getElementById("emptyState");
+const $clicksModal = document.getElementById("clicksModal");
+const $modalBody = document.getElementById("modalBody");
+const $modalClose = document.getElementById("modalClose");
 
 const getCookie = (name) => {
     const value = `; ${document.cookie}`;
@@ -47,7 +50,7 @@ const loadStats = async () => {
         if (response.ok) {
             const data = await response.json();
             $totalClicks.textContent = formatNumber(data.total_clicks || 0);
-            $totalLinks.textContent = formatNumber(data.total_links || 0);
+            $totalLinks.textContent = formatNumber(data.active_links || 0);
         }
     } catch (error) {
         console.error("Failed to load stats:", error);
@@ -83,8 +86,8 @@ const renderLinks = (links) => {
     $linksTableBody.innerHTML = links.map((link) => `
         <tr>
             <td>
-                <a href="/${link.code}" class="short-link-cell" target="_blank">
-                    LinkFlow.io/${link.code}
+                <a href="${window.location.origin}/${link.code}" class="short-link-cell" target="_blank">
+                    ${window.location.origin}/${link.code}
                 </a>
             </td>
             <td class="original-url-cell" title="${link.redirect}">
@@ -93,6 +96,12 @@ const renderLinks = (links) => {
             <td class="clicks-cell">${link.clicks || 0}</td>
             <td>
                 <div class="actions-cell">
+                    <button class="btn-action" onclick="viewClicks('${link.code}')" title="View Clicks">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
                     <button class="btn-action" onclick="window.open('/${link.code}', '_blank')" title="View">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -110,6 +119,34 @@ const renderLinks = (links) => {
             </td>
         </tr>
     `).join("");
+};
+
+window.viewClicks = async (code) => {
+    try {
+        const response = await fetch(`/profile/api/links/${code}/clicks`);
+        if (!response.ok) {
+            return;
+        }
+        const clicks = await response.json();
+        renderClicksModal(clicks);
+    } catch (error) {
+        console.error("Failed to load clicks:", error);
+    }
+};
+
+const renderClicksModal = (clicks) => {
+    if (!clicks || clicks.length === 0) {
+        $modalBody.innerHTML = '<p class="no-clicks">No clicks recorded yet.</p>';
+    } else {
+        $modalBody.innerHTML = clicks.map((click) => `
+            <div class="click-item">
+                <span class="click-ip">${click.ip || 'Unknown IP'}</span>
+                <span class="click-agent">${click.user_agent || 'Unknown'}</span>
+                <span class="click-time">${new Date(click.created_at).toLocaleString()}</span>
+            </div>
+        `).join("");
+    }
+    $clicksModal.style.display = "flex";
 };
 
 window.deleteLink = async (id) => {
@@ -208,6 +245,20 @@ const init = () => {
         $btnCopy.addEventListener("click", () => {
             const url = $shortenedUrl?.textContent;
             if (url) copyToClipboard(url);
+        });
+    }
+
+    if ($modalClose) {
+        $modalClose.addEventListener("click", () => {
+            $clicksModal.style.display = "none";
+        });
+    }
+
+    if ($clicksModal) {
+        $clicksModal.addEventListener("click", (e) => {
+            if (e.target === $clicksModal) {
+                $clicksModal.style.display = "none";
+            }
         });
     }
 };

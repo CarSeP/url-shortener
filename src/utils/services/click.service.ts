@@ -9,3 +9,11 @@ export const getClicksByCode = async (code: string) => {
   if (!result || !result[0]) return { total: 0 };
   return result[0];
 };
+
+export const getRecentClicks = async (code: string, limit: number = 10) => {
+  const result = await db(
+    "SELECT ip, user_agent, created_at FROM clicks WHERE code = $1 ORDER BY created_at DESC LIMIT $2;",
+    [code, String(limit)]
+  );
+  return result || [];
+};
