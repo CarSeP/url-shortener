@@ -13,6 +13,7 @@ const $emptyState = document.getElementById("emptyState");
 const $clicksModal = document.getElementById("clicksModal");
 const $modalBody = document.getElementById("modalBody");
 const $modalClose = document.getElementById("modalClose");
+const $logoutBtn = document.getElementById("logoutBtn");
 
 const getCookie = (name) => {
     const value = `; ${document.cookie}`;
@@ -232,10 +233,20 @@ const copyToClipboard = async (text) => {
     } catch { }
 };
 
+const handleLogout = () => {
+    document.cookie = "auth_token=; path=/; max-age=0";
+    document.cookie = "user=; path=/; max-age=0";
+    window.location.href = "/";
+};
+
 const init = () => {
     loadUserProfile();
     loadStats();
     loadLinks();
+
+    if ($logoutBtn) {
+        $logoutBtn.addEventListener("click", handleLogout);
+    }
 
     if ($shortenForm) {
         $shortenForm.addEventListener("submit", onSubmit);
