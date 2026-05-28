@@ -1,54 +1,134 @@
-# Url shortener
-A lightweight application written with Bun that uses SQLite (or PostgreSQL) as a database to store and manage short URL redirects.
+# URL Shortener
 
-## Technologies
+A lightweight URL shortener application built with Bun, TypeScript, and Elysia. Features user authentication via GitHub OAuth, click tracking, and user dashboards.
 
-- Bun
-- TypeScript
-- Elysia
-- Sqlite and PostgreSQL
+## Features
 
-## Installation
+- **URL Shortening**: Create short URLs with automatic code generation
+- **User Authentication**: GitHub OAuth integration
+- **Click Tracking**: Records IP address and user agent for each redirect
+- **User Dashboard**: View your links, statistics, and recent clicks
+- **Database Support**: Works with SQLite (development) and PostgreSQL (production)
 
-Clone the repository:
+## Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| Runtime | Bun |
+| Language | TypeScript |
+| Framework | Elysia |
+| Database | SQLite / PostgreSQL |
+
+## Prerequisites
+
+- Bun installed on your system
+- A GitHub OAuth application (for authentication)
+
+## Setup
+
+### 1. Clone the repository
+
 ```sh
 git clone https://github.com/CarSeP/url-shortener.git
 cd url-shortener
 ```
 
-Install the dependencies
+### 2. Install dependencies
+
 ```sh
 bun install
 ```
-Copy the values from .env.example and create a .env file
 
-## Usage
+### 3. Configure environment variables
 
-Development
+Copy `.env.example` to `.env` and configure the following:
+
+```env
+PORT=3000
+
+# GitHub OAuth (required for authentication)
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
+GITHUB_REDIRECT_URI=http://localhost:3000/auth/github/callback
+
+# Database (optional - defaults to SQLite if not set)
+# DATABASE_URL=postgresql://user:password@localhost:5432/url_shortener
+```
+
+### 4. Create GitHub OAuth App
+
+1. Go to GitHub Settings > Developer settings > OAuth Apps
+2. Create a new OAuth App
+3. Set the callback URL to: `http://localhost:3000/auth/github/callback`
+4. Copy the Client ID and Client Secret to your `.env` file
+
+## Running
+
+### Development
+
 ```sh
 bun run dev
 ```
 
-Production
+### Production
+
 ```sh
 bun run build
 bun run start
 ```
 
-The application will be available at: http://localhost:3000
+The application will be available at `http://localhost:3000`
 
-## Api
+## Project Structure
 
-**Create shortened URL**
-<br>
-Endpoint: `POST /api`
-Body:
-```json
+```
+url-shortener/
+├── dist/                      # Production build
+├── src/
+│   ├── controllers/           # Request handlers
+│   │   ├── auth.controller.ts
+│   │   ├── code.controller.ts
+│   │   └── profile.controller.ts
+│   ├── routes/                # API route definitions
+│   │   ├── auth.router.ts
+│   │   ├── code.router.ts
+│   │   └── profile.router.ts
+│   ├── utils/
+│   │   ├── schemas/           # Request validation schemas
+│   │   ├── services/         # Business logic
+│   │   │   ├── click.service.ts
+│   │   │   ├── code.service.ts
+│   │   │   ├── db.service.ts
+│   │   │   ├── ip.service.ts
+│   │   │   ├── shortUrl.service.ts
+│   │   │   ├── url.service.ts
+│   │   │   └── user.service.ts
+│   │   └── test/              # Unit tests
+│   └── views/                 # HTML pages
+│       ├── app/               # Main application page
+│       └── profile/           # User dashboard page
+├── index.ts                   # Application entry point
+├── server.ts                  # Server configuration
+└── package.json
+```
+
+## API Reference
+
+### Create Short URL
+
+Creates a new shortened URL.
+
+```
+POST /api
+Content-Type: application/json
+
 {
-	"url": "https://example.com/abc/123"
+  "url": "https://example.com/abc/123"
 }
 ```
-Response:
+
+**Response**
+
 ```json
 {
   "code": "5MgXZJT",
@@ -56,34 +136,108 @@ Response:
 }
 ```
 
-**Redirection**
-<br>
-Endpoint: `GET /:code`
-<br>
-Automatically redirects to the original URL associated with the code.
+### Redirect
+
+Accessing a short code redirects to the original URL and records the click.
+
+```
+GET /:code
+```
+
+### Get Click Statistics
+
+Retrieves click data for a specific short code.
+
+```
+GET /api/clicks/:code
+```
+
+### Authentication
+
+#### GitHub Login
+
+```
+GET /auth/github
+```
+
+Redirects to GitHub authorization page.
+
+#### GitHub Callback
+
+```
+GET /auth/github/callback
+```
+
+Handles the OAuth callback and sets authentication cookies.
+
+### User Profile (Requires Auth)
+
+#### Get User Links
+
+```
+GET /profile/api/links
+```
+
+**Response**
+
+```json
+[
+  {
+    "id": 1,
+    "redirect": "https://example.com",
+    "code": "5MgXZJT",
+    "clicks": 42,
+    "created_at": "2024-01-15T10:30:00Z"
+  }
+]
+```
+
+#### Get User Statistics
+
+```
+GET /profile/api/stats
+```
+
+**Response**
+
+```json
+{
+  "total_links": 15,
+  "total_clicks": 1234,
+  "active_links": 12
+}
+```
+
+#### Delete Link
+
+```
+DELETE /profile/api/links/:id
+```
+
+#### Get Recent Link Clicks
+
+```
+GET /profile/api/links/:code/clicks
+```
 
 ## Testing
 
-Run the test suite
 ```sh
 bun run test
 ```
 
-## Project Structure
+## Environment Variables
 
-```plaintext
-Url shortener/
-├── dist/             # Production build
-├── src/              # Resources
-│   ├── controllers/  # Endpoint logic
-│   ├── public/       # Static files
-│   ├── services/     # Functions
-│   ├── test/         # Unit tests
-│   ├── route.ts      # File responsible for routes
-│   ├── server.ts     # File responsible for initializing the server
-├── index.ts          # Initialize the server
-└── ...               # Other configuration files
-```
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `PORT` | No | 3000 | Server port |
+| `GITHUB_CLIENT_ID` | Yes* | - | GitHub OAuth Client ID |
+| `GITHUB_CLIENT_SECRET` | Yes* | - | GitHub OAuth Client Secret |
+| `GITHUB_REDIRECT_URI` | No | `http://localhost:3000/auth/github/callback` | OAuth callback URL |
+| `DATABASE_URL` | No | SQLite file | PostgreSQL connection string |
+
+*Required only if using authentication features.
 
 ## License
-Distributed under the MIT License.
+
+MIT License
