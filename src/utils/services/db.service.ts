@@ -88,37 +88,40 @@ const validatePostgresql = async (connection: SQL) => {
   try {
     console.log("Loading the PostgreSQL connection...");
     await connection`
-CREATE TABLE IF NOT EXISTS users (
-  id BIGSERIAL PRIMARY KEY,
-  github_id BIGINT NOT NULL UNIQUE,
-  login TEXT NOT NULL,
-  avatar_url TEXT,
-  name TEXT,
-  email TEXT,
-  access_token TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS url (
-  id BIGSERIAL PRIMARY KEY,
-  user_id BIGINT,
-  redirect TEXT NOT NULL,
-  code TEXT NOT NULL UNIQUE,
-  clicks BIGINT DEFAULT 0,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
-);
-
-CREATE TABLE IF NOT EXISTS clicks (
-  id BIGSERIAL PRIMARY KEY,
-  code TEXT NOT NULL,
-  ip TEXT,
-  user_agent TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-`;
+      CREATE TABLE IF NOT EXISTS users (
+        id BIGSERIAL PRIMARY KEY,
+        github_id BIGINT NOT NULL UNIQUE,
+        login TEXT NOT NULL,
+        avatar_url TEXT,
+        name TEXT,
+        email TEXT,
+        access_token TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+    await connection`
+      CREATE TABLE IF NOT EXISTS url (
+        id BIGSERIAL PRIMARY KEY,
+        user_id BIGINT,
+        redirect TEXT NOT NULL,
+        code TEXT NOT NULL UNIQUE,
+        clicks BIGINT DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+      )
+    `;
+    await connection`
+      CREATE TABLE IF NOT EXISTS clicks (
+        id BIGSERIAL PRIMARY KEY,
+        code TEXT NOT NULL,
+        ip TEXT,
+        user_agent TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
     return true;
   } catch (error) {
+    console.log(error)
     return false;
   }
 };
